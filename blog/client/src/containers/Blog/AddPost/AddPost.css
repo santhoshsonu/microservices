@@ -1,0 +1,26 @@
+
+.postSection{
+    background-color: #FFEB3B;  
+    /* #fff5f8; */
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    /* padding: 16px; */
+}
+
+.postCard{
+    align-items: stretch;
+    max-width: 50%;
+}
+
+.addPostTitle{
+    color: #000000;
+    font-weight: 800 !important;
+    font-size: 1.15rem !important;
+    padding: 16px;
+}
+.postSubmit {
+    background-color: #ff3366 !important;
+    color: #ffffff !important;
+    margin: 16px auto !important;
+}
