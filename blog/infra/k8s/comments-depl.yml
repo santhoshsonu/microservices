@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blog-posts-depl
+  name: blog-comments-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blog-posts
+      app: blog-comments
   template:
     metadata:
       labels:
-        app: blog-posts
+        app: blog-comments
     spec:
       containers:
-      - name: blog-posts
-        image: armosdocker/blog-posts
+      - name: blog-comments
+        image: armosdocker/blog-comments
         resources:
           limits:
             memory: "128Mi"
@@ -28,13 +28,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: blog-posts-clusterip-srv
+  name: blog-comments-srv
 spec:
   type: ClusterIP
   selector:
-    app: blog-posts
+    app: blog-comments
   ports:
-  - name: blog-posts
+  - name: blog-comments
     protocol: TCP
-    port: 3000
-    targetPort: 3000
+    port: 3001
+    targetPort: 3001

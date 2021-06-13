@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: blog-posts-depl
+  name: blog-query-depl
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: blog-posts
+      app: blog-query
   template:
     metadata:
       labels:
-        app: blog-posts
+        app: blog-query
     spec:
       containers:
-      - name: blog-posts
-        image: armosdocker/blog-posts
+      - name: blog-query
+        image: armosdocker/blog-query
         resources:
           limits:
             memory: "128Mi"
@@ -28,13 +28,13 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: blog-posts-clusterip-srv
+  name: blog-query-srv
 spec:
   type: ClusterIP
   selector:
-    app: blog-posts
+    app: blog-query
   ports:
-  - name: blog-posts
+  - name: blog-query
     protocol: TCP
-    port: 3000
-    targetPort: 3000
+    port: 3002
+    targetPort: 3002
