@@ -17,8 +17,10 @@ router.post('/', async (req, res, next) => {
     await axios.post(config.POSTS_SERVICE, event);
     await axios.post(config.COMMENTS_SERVICE, event);
     await axios.post(config.QUERY_SERVICE, event);
+    await axios.post(config.MODERATION_SERVICE, event);
   } catch (err) {
     console.log(err);
+    events.pop();
     return next(new HttpError('Internal Server error.', 500));
   }
 
