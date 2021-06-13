@@ -18,14 +18,14 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // CORS
-// app.use(function (req, res, next) {
-//   res.setHeader('Access-Control-Allow-Origin', '*');
-//   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
-//   next();
-// });
+app.use(function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+  next();
+});
 
-app.use('/comment', indexRouter);
+app.use('/events', indexRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

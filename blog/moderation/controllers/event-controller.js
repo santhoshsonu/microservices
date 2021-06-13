@@ -6,6 +6,7 @@ const HttpError = require('../util/http-error');
 const filterString = 'orange';
 
 const eventHanlder = async (type, data) => {
+    console.log(`MODERATION Services received event ${type}`);
     if (type === 'CREATE_COMMENT') {
         data.status = data.content.includes(filterString) ? 'rejected' : 'approved';
         try {
