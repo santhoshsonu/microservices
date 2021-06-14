@@ -1,14 +1,15 @@
 # Base Image
 FROM node:alpine
 
+ENV CI=true
+
 # Working Directory
-WORKDIR /usr/app
+WORKDIR /app
 
 # Install dependencies
 # Minimize rebuilds and cache busting
 COPY ./package.json ./
 RUN npm install
-RUN npm audit fix
 
 COPY ./ ./
 
