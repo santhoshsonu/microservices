@@ -1,0 +1,48 @@
+apiVersion: skaffold/v2alpha3
+kind: Config
+deploy:
+  kubectl:
+    manifests:
+      - ./infra/k8s/*
+build:
+  local:
+    push: false
+  artifacts:
+    - image: armosdocker/blog-client
+      context: blog-client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - dest: .
+            src: 'src/**/*.js'
+    - image: armosdocker/blog-comments
+      context: blog-comments
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        auto: true
+    - image: armosdocker/blog-event-bus
+      context: blog-event-bus
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        auto: true
+    - image: armosdocker/blog-moderation
+      context: blog-moderation
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        auto: true
+    - image: armosdocker/blog-posts
+      context: blog-posts
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        auto: true
+    - image: armosdocker/blog-query
+      context: blog-query
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        auto: true
