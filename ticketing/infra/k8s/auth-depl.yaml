@@ -13,12 +13,12 @@ spec:
         app: ticketing-auth
     spec:
       containers:
-      - name: ticketing-auth
-        image: armosdocker/ticketing-auth
-        resources:
-          limits:
-            memory: "64Mi"
-            cpu: "250m"
+        - name: ticketing-auth
+          image: armosdocker/ticketing-auth
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
 
 ---
 # Cluster Service
@@ -31,7 +31,7 @@ spec:
   selector:
     app: ticketing-auth
   ports:
-  - name: ticketing-auth
-    protocol: TCP
-    port: 3000
-    targetPort: 3000
+    - name: ticketing-auth
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
