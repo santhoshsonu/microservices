@@ -9,11 +9,14 @@ const router = express.Router();
 /**
  * Get current user
  */
-router.get('/currentuser', (req, res, next) => {
-  // TODO: Implementation
-  currentUser();
-  res.json({ msg: 'Hi there!' });
-});
+router.get('/currentuser',
+  async (req, res, next) => {
+    try {
+      // TODO: Implementation
+      currentUser();
+    } catch (err) { return next(err); }
+    res.json({ msg: 'Hi there!' });
+  });
 
 /**
  * Add a new user
@@ -31,15 +34,17 @@ router.post('/signup',
       .isLength({ min: 4, max: 25 })
       .withMessage('Password must be between 4 and 25 characters')
   ],
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      throw new RequestValidationError(errors.array());
+      return next(new RequestValidationError(errors.array()));
     }
 
     const { email, password }: { email: string; password: string } = req.body;
-    // TODO: Implementation
-    signUp('', '');
+    try {
+      // TODO: Implementation
+      signUp('', '');
+    } catch (err) { return next(err); }
 
     res.status(201).json({ email });
   });
@@ -60,15 +65,18 @@ router.post('/signin',
       .isLength({ min: 4, max: 25 })
       .withMessage('Password must be between 4 and 25 characters')
   ],
-  (req: Request, res: Response, next: NextFunction) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      throw new RequestValidationError(errors.array());
+      return next(new RequestValidationError(errors.array()));
     }
 
     const { email, password }: { email: string; password: string } = req.body;
-    // TODO: Implementation
-    signIn('', '');
+
+    try {
+      // TODO: Implementation
+      signIn('', '');
+    } catch (err) { return next(err); };
 
     res.status(201).json({ email });
   });
@@ -76,8 +84,11 @@ router.post('/signin',
 /**
  * Signout a user
  */
-router.post('/signout', (req, res, next) => {
-  signOut();
+router.post('/signout', async (req, res, next) => {
+  try {
+    // TODO: Implementation
+    signOut();
+  } catch (err) { return next(err); }
   res.json({ msg: 'Signout :(' });
 });
 
