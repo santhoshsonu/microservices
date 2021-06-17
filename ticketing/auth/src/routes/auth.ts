@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from 'express';
 import { check, validationResult } from 'express-validator';
 
+import { RequestValidationError } from '../utils/errors/request-validation-error';
 import { signIn, signOut, signUp, currentUser } from '../controllers/auth-controller';
 
 const router = express.Router();
@@ -33,7 +34,7 @@ router.post('/signup',
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      throw new RequestValidationError(errors.array());
     }
 
     const { email, password }: { email: string; password: string } = req.body;
@@ -62,7 +63,7 @@ router.post('/signin',
   (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      throw new RequestValidationError(errors.array());
     }
 
     const { email, password }: { email: string; password: string } = req.body;

@@ -1,4 +1,6 @@
-import express from 'express';
+// import express from 'express';
+
+import { DatabaseConnectionError } from '../utils/errors/database-connection-error';
 
 /**
  * Authenticate a user
@@ -7,7 +9,7 @@ import express from 'express';
  * @param password: string
  */
 export const signIn = (email: string, password: string): boolean => {
-  return true;
+  throw new DatabaseConnectionError();
 };
 
 /**
@@ -17,19 +19,19 @@ export const signIn = (email: string, password: string): boolean => {
  * @param password: string
  */
 export const signUp = (email: string, password: string): boolean => {
-  return true;
+  throw new DatabaseConnectionError();
 };
 
 /**
  * Get current user
  */
 export const currentUser = (): boolean => {
-  return true;
+  throw new DatabaseConnectionError();
 };
 
 /**
  * Signout a user
  */
 export const signOut = (): boolean => {
-  return true;
+  throw new DatabaseConnectionError();
 };
