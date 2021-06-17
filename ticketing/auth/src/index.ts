@@ -1,6 +1,7 @@
 import express from 'express';
 import { json } from 'body-parser';
 
+import { NotFoundError } from './utils/errors/not-found-error';
 import { errorHandler } from './middlewares/error-handler';
 import { authRouter } from './routes/auth';
 
@@ -21,7 +22,7 @@ app.use('/api/users/', authRouter);
  * catch 404 errors and pass to global error hanlder
  */
 app.use((_req: express.Request, _res: express.Response, next: express.NextFunction) => {
-  return next(new Error());
+  return next(new NotFoundError());
 });
 
 /**
