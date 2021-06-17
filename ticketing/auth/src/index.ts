@@ -1,9 +1,10 @@
-import express from 'express';
 import { json } from 'body-parser';
-
-import { NotFoundError } from './utils/errors/not-found-error';
+import express from 'express';
+import mongoose from 'mongoose';
 import { errorHandler } from './middlewares/error-handler';
 import { authRouter } from './routes/auth';
+import { NotFoundError } from './utils/errors/not-found-error';
+
 
 /**
  * App port
@@ -30,6 +31,24 @@ app.use((_req: express.Request, _res: express.Response, next: express.NextFuncti
  */
 app.use(errorHandler);
 
-app.listen(port, () => {
-  console.log(`Listening on port ${port}`);
-});
+/**
+ * DB connection &
+ * App startup
+ */
+const start = async () => {
+  try {
+    await mongoose.connect('mongodb://ticketing-auth-mongo-srv:27017/auth', {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true
+    });
+    console.log('Connected to database');
+  } catch (err) { console.log(err); };
+
+  app.listen(port, () => {
+    console.log(`Listening on port ${port}`);
+  });
+
+};
+
+start();
