@@ -9,14 +9,7 @@ const router = express.Router();
 /**
  * Get current user
  */
-router.get('/currentuser',
-  async (req, res, next) => {
-    try {
-      // TODO: Implementation
-      currentUser();
-    } catch (err) { return next(err); }
-    res.json({ msg: 'Hi there!' });
-  });
+router.get('/currentuser', signIn);
 
 /**
  * Add a new user
@@ -34,20 +27,8 @@ router.post('/signup',
       .isLength({ min: 4, max: 25 })
       .withMessage('Password must be between 4 and 25 characters')
   ],
-  async (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return next(new RequestValidationError(errors.array()));
-    }
-
-    const { email, password }: { email: string; password: string } = req.body;
-    try {
-      // TODO: Implementation
-      signUp('', '');
-    } catch (err) { return next(err); }
-
-    res.status(201).json({ email });
-  });
+  signUp
+);
 
 /**
  * Authenticate a user
@@ -65,31 +46,11 @@ router.post('/signin',
       .isLength({ min: 4, max: 25 })
       .withMessage('Password must be between 4 and 25 characters')
   ],
-  async (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return next(new RequestValidationError(errors.array()));
-    }
-
-    const { email, password }: { email: string; password: string } = req.body;
-
-    try {
-      // TODO: Implementation
-      signIn('', '');
-    } catch (err) { return next(err); };
-
-    res.status(201).json({ email });
-  });
+  signIn);
 
 /**
  * Signout a user
  */
-router.post('/signout', async (req, res, next) => {
-  try {
-    // TODO: Implementation
-    signOut();
-  } catch (err) { return next(err); }
-  res.json({ msg: 'Signout :(' });
-});
+router.post('/signout', signOut);
 
 export { router as authRouter };
