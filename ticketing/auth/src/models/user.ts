@@ -32,7 +32,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   }
-}, { timestamps: true });
+}, {
+  timestamps: true,
+  toJSON: {
+    transform(doc, ret) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.password;
+      delete ret.updatedAt;
+    }
+  },
+  versionKey: false
+});
 
 userSchema.pre('save', async function (done) {
   if (this.isModified('password')) {
