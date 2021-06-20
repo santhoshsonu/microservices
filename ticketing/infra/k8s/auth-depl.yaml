@@ -15,6 +15,13 @@ spec:
       containers:
         - name: ticketing-auth
           image: armosdocker/ticketing-auth
+          # Env variables
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY # K8s secret key
           resources:
             limits:
               memory: "256Mi"
