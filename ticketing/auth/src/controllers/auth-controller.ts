@@ -38,13 +38,12 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      console.log(`Email already in use`);
       const errors = [{ message: 'Email already in use' }];
       return next(new BadRequestError('Email already in use'));
     }
   } catch (err) {
     console.log(`Database Error: ${err.message}`);
-    return next(new DatabaseConnectionError);
+    return next(new DatabaseConnectionError());
   }
 
   const user = User.build({ email, password });
@@ -52,7 +51,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     await user.save();
   } catch (err) {
     console.log(`Database Error: ${err.message}`);
-    return next(new DatabaseConnectionError);
+    return next(new DatabaseConnectionError());
   }
 
   // Generate JWT
@@ -74,7 +73,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
  * Get current user
  */
 export const currentUser = async (req: Request, res: Response, next: NextFunction) => {
-  throw new DatabaseConnectionError();
+  return next(new DatabaseConnectionError());
 };
 
 /**
@@ -83,6 +82,6 @@ export const currentUser = async (req: Request, res: Response, next: NextFunctio
 export const signOut = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // TODO: Implementation
-    throw new DatabaseConnectionError();
+    return next(new DatabaseConnectionError());
   } catch (err) { return next(err); }
 };
