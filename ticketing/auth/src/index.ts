@@ -4,15 +4,25 @@ import mongoose from 'mongoose';
 import { errorHandler } from './middlewares/error-handler';
 import { authRouter } from './routes/auth';
 import { NotFoundError } from './utils/errors/not-found-error';
-
+import cookieSession from 'cookie-session';
+import { config } from './config/config';
 
 /**
  * App port
  */
-const port: number = 3000;
+const port: number = config.PORT;
 
 const app = express();
+
+// Traffic is proxied through Ingress Nginx 
+// Set Express to trust the proxy
+app.set('trust proxy', true);
+
 app.use(json());
+app.use(cookieSession({
+  signed: false,
+  secure: true,
+}));
 
 /**
  * App routes
@@ -36,6 +46,9 @@ app.use(errorHandler);
  * App startup
  */
 const start = async () => {
+  if (!config.JWT_KEY) {
+    throw new Error('Env variable: JWT_SECRET must be defined');
+  }
   try {
     await mongoose.connect('mongodb://ticketing-auth-mongo-srv:27017/auth', {
       useNewUrlParser: true,
