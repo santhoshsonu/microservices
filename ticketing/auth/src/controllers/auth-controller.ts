@@ -1,10 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
+import { config } from '../config/config';
 import { User } from '../models/user';
 import { BadRequestError } from '../utils/errors/bad-request-error';
-
 import { DatabaseConnectionError } from '../utils/errors/database-connection-error';
 import { RequestValidationError } from '../utils/errors/request-validation-error';
+
+
 
 /**
  * Authenticate a user
@@ -51,6 +54,18 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     console.log(`Database Error: ${err.message}`);
     return next(new DatabaseConnectionError);
   }
+
+  // Generate JWT
+  // ! symbol to tell TS to ignore
+  const userJwt = jwt.sign({
+    id: user.id,
+    email: user.email
+  }, config.JWT_KEY!);
+
+  // Store it on session object
+  req.session = {
+    jwt: userJwt
+  };
 
   res.status(201).json(user);
 };
