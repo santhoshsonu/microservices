@@ -1,26 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { validationResult } from 'express-validator';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/config';
 import { User } from '../models/user';
+import { Password } from '../services/password';
 import { BadRequestError } from '../utils/errors/bad-request-error';
-import { DatabaseConnectionError } from '../utils/errors/database-connection-error';
-import { RequestValidationError } from '../utils/errors/request-validation-error';
+import { InternalServerError } from '../utils/errors/internal-server-error';
 
-
-
-/**
- * Authenticate a user
- * Request Body params
- * @param email: string
- * @param password: string
- */
-export const signIn = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // TODO: Implementation
-    throw new DatabaseConnectionError();
-  } catch (err) { return next(err); }
-}
 
 /**
  * Add a new user
@@ -29,29 +14,24 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
  * @param password: string
  */
 export const signUp = async (req: Request, res: Response, next: NextFunction) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return next(new RequestValidationError(errors.array()));
-  }
   const { email, password }: { email: string; password: string } = req.body;
   try {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      const errors = [{ message: 'Email already in use' }];
       return next(new BadRequestError('Email already in use'));
     }
   } catch (err) {
     console.log(`Database Error: ${err.message}`);
-    return next(new DatabaseConnectionError());
+    return next(new InternalServerError());
   }
 
   const user = User.build({ email, password });
   try {
     await user.save();
   } catch (err) {
-    console.log(`Database Error: ${err.message}`);
-    return next(new DatabaseConnectionError());
+    console.log(`Signup Error: ${err.message}`);
+    return next(new InternalServerError());
   }
 
   // Generate JWT
@@ -61,7 +41,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     email: user.email
   }, config.JWT_KEY!);
 
-  // Store it on session object
+  // Store jwt on session object
   req.session = {
     jwt: userJwt
   };
@@ -69,12 +49,47 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
   res.status(201).json(user);
 };
 
+
+/**
+ * Authenticate a user
+ * Request Body params
+ * @param email: string
+ * @param password: string
+ */
+export const signIn = async (req: Request, res: Response, next: NextFunction) => {
+  const { email, password } = req.body;
+  try {
+    const existingUser = await User.findOne({ email });
+
+    if (!existingUser || !(await Password.compare(existingUser.password, password))) {
+      return next(new BadRequestError('Invalid credentials'));
+    }
+
+    // Generate JWT
+    const userJWT = jwt.sign({
+      id: existingUser.id,
+      email: existingUser.email
+    }, process.env.JWT_SECRET!);
+
+    // Store jwt on session object
+    req.session = {
+      jwt: userJWT
+    };
+    res.status(200).json(existingUser);
+  } catch (err) {
+    console.log(`Signin Error: ${err.message}`);
+    return next(new InternalServerError());
+  }
+}
+
+
 /**
  * Get current user
  */
 export const currentUser = async (req: Request, res: Response, next: NextFunction) => {
-  return next(new DatabaseConnectionError());
+  return next(new InternalServerError());
 };
+
 
 /**
  * Signout a user
@@ -82,6 +97,6 @@ export const currentUser = async (req: Request, res: Response, next: NextFunctio
 export const signOut = async (req: Request, res: Response, next: NextFunction) => {
   try {
     // TODO: Implementation
-    return next(new DatabaseConnectionError());
+    return next(new InternalServerError());
   } catch (err) { return next(err); }
 };
