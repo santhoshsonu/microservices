@@ -1,8 +1,8 @@
-import express, { Request, Response, NextFunction } from 'express';
-import { check, validationResult } from 'express-validator';
+import express from 'express';
+import { check } from 'express-validator';
+import { signIn, signOut, signUp } from '../controllers/auth-controller';
+import { validateRequest } from '../middlewares/validate-request';
 
-import { RequestValidationError } from '../utils/errors/request-validation-error';
-import { signIn, signOut, signUp, currentUser } from '../controllers/auth-controller';
 
 const router = express.Router();
 
@@ -27,6 +27,7 @@ router.post('/signup',
       .isLength({ min: 4, max: 25 })
       .withMessage('Password must be between 4 and 25 characters')
   ],
+  validateRequest,
   signUp
 );
 
@@ -43,9 +44,10 @@ router.post('/signin',
       .withMessage('Email must be valid'),
     check('password')
       .trim()
-      .isLength({ min: 4, max: 25 })
-      .withMessage('Password must be between 4 and 25 characters')
+      .notEmpty()
+      .withMessage('Password must not be empty')
   ],
+  validateRequest,
   signIn);
 
 /**
