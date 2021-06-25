@@ -1,6 +1,6 @@
 import express from 'express';
 import { check } from 'express-validator';
-import { signIn, signOut, signUp } from '../controllers/auth-controller';
+import { currentUser, signIn, signOut, signUp } from '../controllers/auth-controller';
 import { validateRequest } from '../middlewares/validate-request';
 
 
@@ -9,7 +9,7 @@ const router = express.Router();
 /**
  * Get current user
  */
-router.get('/currentuser', signIn);
+router.get('/currentuser', currentUser);
 
 /**
  * Add a new user
