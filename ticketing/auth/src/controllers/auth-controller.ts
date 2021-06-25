@@ -69,7 +69,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
     const userJWT = jwt.sign({
       id: existingUser.id,
       email: existingUser.email
-    }, process.env.JWT_SECRET!);
+    }, config.JWT_KEY!);
 
     // Store jwt on session object
     req.session = {
@@ -87,7 +87,15 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
  * Get current user
  */
 export const currentUser = async (req: Request, res: Response, next: NextFunction) => {
-  return next(new InternalServerError());
+  if (!req.session?.jwt) { // Equivalent to !req.session || !req.session.jwt
+    return res.status(200).json({ currentUser: null });
+  }
+  try {
+    const payload = jwt.verify(req.session.jwt, config.JWT_KEY!);
+    return res.status(200).json({ currentUser: payload });
+  } catch (error) {
+    return next(new InternalServerError());
+  }
 };
 
 
@@ -95,8 +103,6 @@ export const currentUser = async (req: Request, res: Response, next: NextFunctio
  * Signout a user
  */
 export const signOut = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    // TODO: Implementation
-    return next(new InternalServerError());
-  } catch (err) { return next(err); }
+  req.session = null;
+  res.status(200).json({});
 };
