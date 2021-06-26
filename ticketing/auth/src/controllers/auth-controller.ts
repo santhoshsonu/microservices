@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, raw, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { config } from '../config/config';
 import { User } from '../models/user';
@@ -87,15 +87,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
  * Get current user
  */
 export const currentUser = async (req: Request, res: Response, next: NextFunction) => {
-  if (!req.session?.jwt) { // Equivalent to !req.session || !req.session.jwt
-    return res.status(200).json({ currentUser: null });
-  }
-  try {
-    const payload = jwt.verify(req.session.jwt, config.JWT_KEY!);
-    return res.status(200).json({ currentUser: payload });
-  } catch (error) {
-    return next(new InternalServerError());
-  }
+  return res.status(200).json({ currentUser: req.currentUser || null });
 };
 
 
