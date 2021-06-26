@@ -7,7 +7,6 @@ export const validateRequest = (req: Request, res: Response, next: NextFunction)
   if (!errors.isEmpty()) {
     const error = new RequestValidationError(errors.array());
     throw error;
-    // return res.json(error.statusCode).json(error.serializeErrors());
   }
   next();
 }
