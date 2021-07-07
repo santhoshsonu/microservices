@@ -17,12 +17,12 @@ const start = async () => {
     throw new Error('Env variable: JWT_SECRET must be defined');
   }
   try {
-    await mongoose.connect('mongodb://ticketing-auth-mongo-srv:27017/auth', {
+    await mongoose.connect(config.MONGO_URL, {
       useNewUrlParser: true,
       useCreateIndex: true,
       useUnifiedTopology: true
     });
-    console.log('Connected to database');
+    console.log(`Connected to database ${config.MONGO_URL}`);
   } catch (err) { console.log(err); };
 
   app.listen(port, () => {
