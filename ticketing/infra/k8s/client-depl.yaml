@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticketing-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticketing-client
+  template:
+    metadata:
+      labels:
+        app: ticketing-client
+    spec:
+      containers:
+        - name: ticketing-client
+          image: armosdocker/ticketing-client
+
+---
+# Cluster Service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticketing-client-srv
+spec:
+  selector:
+    app: ticketing-client
+  ports:
+    - name: ticketing-client
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
