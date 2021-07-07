@@ -1,45 +1,12 @@
-import { json } from 'body-parser';
-import express from 'express';
 import mongoose from 'mongoose';
-import { errorHandler } from './middlewares/error-handler';
-import { authRouter } from './routes/auth';
-import { NotFoundError } from './utils/errors/not-found-error';
-import cookieSession from 'cookie-session';
+import { app } from './app';
 import { config } from './config/config';
+
 
 /**
  * App port
  */
 const port: number = config.PORT;
-
-const app = express();
-
-// Traffic is proxied through Ingress Nginx 
-// Set Express to trust the proxy
-app.set('trust proxy', true);
-
-app.use(json());
-app.use(cookieSession({
-  signed: false,
-  secure: true,
-}));
-
-/**
- * App routes
- */
-app.use('/api/users/', authRouter);
-
-/**
- * catch 404 errors and pass to global error hanlder
- */
-app.use((_req: express.Request, _res: express.Response, next: express.NextFunction) => {
-  return next(new NotFoundError());
-});
-
-/**
- * Global Error handler middleware
- */
-app.use(errorHandler);
 
 /**
  * DB connection &
