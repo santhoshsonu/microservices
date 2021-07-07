@@ -19,3 +19,10 @@ spec:
                 name: ticketing-auth-srv
                 port:
                   number: 3000
+          - pathType: Prefix
+            path: "/?(.*)"
+            backend:
+              service:
+                name: ticketing-client-srv
+                port:
+                  number: 3000
