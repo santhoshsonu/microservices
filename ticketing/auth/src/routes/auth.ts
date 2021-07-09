@@ -1,8 +1,7 @@
+import { currentUserMiddleware, validateRequest } from '@microservice-tickets/common';
 import express from 'express';
 import { check } from 'express-validator';
 import { currentUser, signIn, signOut, signUp } from '../controllers/auth-controller';
-import { currentUserMiddleware } from '../middlewares/current-user';
-import { validateRequest } from '../middlewares/validate-request';
 
 const router = express.Router();
 

@@ -1,9 +1,8 @@
+import { errorHandler, NotFoundError } from '@microservice-tickets/common';
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 import express from 'express';
-import { errorHandler } from './middlewares/error-handler';
 import { authRouter } from './routes/auth';
-import { NotFoundError } from './utils/errors/not-found-error';
 
 
 const app = express();

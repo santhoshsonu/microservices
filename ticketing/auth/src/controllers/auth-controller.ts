@@ -1,10 +1,8 @@
-import { NextFunction, raw, Request, Response } from 'express';
+import { BadRequestError, config as commonConfig, InternalServerError } from '@microservice-tickets/common';
+import { NextFunction, Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { config } from '../config/config';
 import { User } from '../models/user';
 import { Password } from '../services/password';
-import { BadRequestError } from '../utils/errors/bad-request-error';
-import { InternalServerError } from '../utils/errors/internal-server-error';
 
 
 /**
@@ -39,7 +37,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
   const userJwt = jwt.sign({
     id: user.id,
     email: user.email
-  }, config.JWT_KEY!);
+  }, commonConfig.JWT_KEY!);
 
   // Store jwt on session object
   req.session = {
@@ -69,7 +67,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
     const userJWT = jwt.sign({
       id: existingUser.id,
       email: existingUser.email
-    }, config.JWT_KEY!);
+    }, commonConfig.JWT_KEY!);
 
     // Store jwt on session object
     req.session = {

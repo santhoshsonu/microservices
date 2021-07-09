@@ -1,7 +1,7 @@
+import { config as commonConfig } from '@microservice-tickets/common';
 import mongoose from 'mongoose';
 import { app } from './app';
 import { config } from './config/config';
-
 
 /**
  * App port
@@ -13,7 +13,7 @@ const port: number = config.PORT;
  * App startup
  */
 const start = async () => {
-  if (!config.JWT_KEY) {
+  if (!commonConfig.JWT_KEY) {
     throw new Error('Env variable: JWT_SECRET must be defined');
   }
   try {

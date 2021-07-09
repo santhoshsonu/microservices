@@ -1,8 +1,8 @@
+import { config as commonConfig } from '@microservice-tickets/common';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../app';
-import { config } from '../config/config';
 
 declare global {
   namespace NodeJS {
@@ -14,7 +14,7 @@ declare global {
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {
-  config.JWT_KEY = 'asdadadawadw';
+  commonConfig.JWT_KEY = 'asdadadawadw';
 
   mongo = new MongoMemoryServer();
   const mongoUri = await mongo.getUri();
