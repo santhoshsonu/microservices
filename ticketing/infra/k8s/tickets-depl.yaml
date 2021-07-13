@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticketing-tickets
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticketing-tickets
+  template:
+    metadata:
+      labels:
+        app: ticketing-tickets
+    spec:
+      containers:
+        - name: ticketing-tickets
+          image: armosdocker/ticketing-tickets
+          # Env variables
+          env:
+            - name: MONGO_URI
+              value: "mongodb://ticketing-tickets-mongo-srv:27017/tickets"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY # K8s secret key
+          # resources:
+          #   limits:
+          #     memory: "256Mi"
+          #     cpu: "250m"
+
+---
+# Cluster Service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticketing-tickets-srv
+spec:
+  selector:
+    app: ticketing-tickets
+  ports:
+    - name: ticketing-tickets
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
