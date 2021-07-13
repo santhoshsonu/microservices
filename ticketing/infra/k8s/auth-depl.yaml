@@ -17,6 +17,8 @@ spec:
           image: armosdocker/ticketing-auth
           # Env variables
           env:
+            - name: MONGO_URI
+              value: "mongodb://ticketing-auth-mongo-srv:27017/auth"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:

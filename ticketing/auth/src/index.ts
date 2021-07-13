@@ -16,6 +16,9 @@ const start = async () => {
   if (!commonConfig.JWT_KEY) {
     throw new Error('Env variable: JWT_SECRET must be defined');
   }
+  if (!config.MONGO_URL) {
+    throw new Error('Env variable: MONGO_URI must be defined');
+  }
   try {
     await mongoose.connect(config.MONGO_URL, {
       useNewUrlParser: true,

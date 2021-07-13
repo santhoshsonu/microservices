@@ -1,8 +1,8 @@
 
 export const config: {
-  MONGO_URL: string,
+  MONGO_URL: string | undefined,
   PORT: number;
 } = {
-  MONGO_URL: 'mongodb://ticketing-auth-mongo-srv:27017/auth',
+  MONGO_URL: process.env.MONGO_URI,
   PORT: process.env.PORT ? parseInt(process.env.PORT) : 3000
 }
