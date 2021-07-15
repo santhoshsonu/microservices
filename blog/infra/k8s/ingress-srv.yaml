@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
-    - host: microservices.blog.com
+    - host: blog.microservices.com
       http:
         paths:
           - path: /posts
