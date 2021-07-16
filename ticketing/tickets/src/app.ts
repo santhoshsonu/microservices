@@ -1,8 +1,8 @@
-import { errorHandler, NotFoundError } from '@microservice-tickets/common';
+import { currentUserMiddleware, errorHandler, NotFoundError } from '@microservice-tickets/common';
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 import express from 'express';
-
+import { ticketsRouter } from './routes/tickets';
 
 const app = express();
 
@@ -20,8 +20,14 @@ app.use(cookieSession({
 }));
 
 /**
+ * Middlewares
+ */
+app.use(currentUserMiddleware);
+
+/**
  * App routes
  */
+app.use('/api/tickets', ticketsRouter);
 
 /**
  * catch 404 errors and pass to global error hanlder
