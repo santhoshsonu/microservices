@@ -9,7 +9,7 @@ metadata:
     nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   rules:
-    - host: microservices.ticketing.com
+    - host: ticketing.microservices.com
       http:
         paths:
           - pathType: Prefix
