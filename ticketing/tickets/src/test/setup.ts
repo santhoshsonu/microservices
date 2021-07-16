@@ -1,13 +1,12 @@
 import { config as commonConfig } from '@microservice-tickets/common';
+import jwt from 'jsonwebtoken';
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
-import request from 'supertest';
-import { app } from '../app';
 
 declare global {
   namespace NodeJS {
     interface Global {
-      getCookie(): Promise<string[]>;
+      getCookie(): string[];
     }
   }
 }
@@ -41,17 +40,25 @@ afterAll(async () => {
 });
 
 // Auth helper
-global.getCookie = async () => {
-  const email = 'test@microservices.ticketing.com';
-  const password = 'test';
+global.getCookie = () => {
+  // Build JWT payload { id, email }
+  const payload = {
+    id: '1234567889',
+    email: 'test@ticketing.microservices.com'
+  };
 
-  const authResponse = await request(app)
-    .post('/api/users/signup')
-    .send({
-      email, password
-    })
-    .expect(201);
+  // Create JWT
+  const token = jwt.sign(payload, commonConfig.JWT_KEY!);
 
-  const cookie = authResponse.get('Set-Cookie');
-  return cookie;
+  // Build session Object { jwt: JWT_TOKEN }
+  const session = { jwt: token };
+
+  // Turn that session into JSON
+  const sessionJSON = JSON.stringify(session);
+
+  // Take JSON and encode it as base64
+  const base64 = Buffer.from(sessionJSON).toString('base64');
+
+  // Return a string thats the cookie with encoded data
+  return [`express:sess=${base64}`];
 }
