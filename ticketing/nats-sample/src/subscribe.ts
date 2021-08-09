@@ -10,16 +10,23 @@ const stan = nats.connect('ticketing-nats', randomBytes(4).toString('hex'), {
 stan.on('connect', () => {
   console.log('Listener connected to NATS');
 
+  const options = stan.subscriptionOptions()
+    .setManualAckMode(true);
+
   // The event will be delivered to exactly one 
   // random member of the Queue Group 
   // (**Very useful when scaling the service horizontally)
-  const subscription = stan.subscribe('ticket:created', 'orders-service-queue-group');
+  const subscription = stan.subscribe('ticket:created',
+    'orders-service-queue-group',
+    options);
 
   subscription.on('message', (msg: Message) => {
     const data = msg.getData();
     if (typeof (data) === 'string') {
       console.log(`Received event #${msg.getSequence()} with data: ${data}`);
     }
+    // Acknowledge that msg is processed
+    msg.ack();
   });
 
 });
