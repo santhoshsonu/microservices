@@ -9,6 +9,12 @@ const stan = nats.connect('ticketing-nats', 'abc', {
 stan.on('connect', () => {
   console.log('Publisher connected to NATS');
 
+  // NATS connection close handler
+  stan.on('close', () => {
+    console.log('Subscriber connection closed');
+    process.exit();
+  });
+
   const data = JSON.stringify({
     id: '123',
     title: 'concert',
@@ -20,3 +26,10 @@ stan.on('connect', () => {
   });
 
 });
+
+/**
+ * Graceful shutdown
+ * Process RESTART/KILL Event 
+*/
+process.on('SIGINT', () => stan.close());
+process.on('SIGTERM', () => stan.close());
