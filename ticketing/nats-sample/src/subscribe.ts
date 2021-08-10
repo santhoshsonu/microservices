@@ -8,14 +8,24 @@ const stan = nats.connect('ticketing-nats', randomBytes(4).toString('hex'), {
 });
 
 stan.on('connect', () => {
-  console.log('Listener connected to NATS');
+  console.log('Subscriber connected to NATS');
+
+  // NATS connection close handler
+  stan.on('close', () => {
+    console.log('Subscriber connection closed');
+    process.exit();
+  });
 
   const options = stan.subscriptionOptions()
-    .setManualAckMode(true);
+    .setManualAckMode(true)
+    .setDeliverAllAvailable()
+    .setDurableName('order-service');
 
-  // The event will be delivered to exactly one 
-  // random member of the Queue Group 
-  // (**Very useful when scaling the service horizontally)
+  /**
+   * The event will be delivered to exactly one 
+   * random member of the Queue Group 
+   * (Very useful when scaling the service horizontally)
+  */
   const subscription = stan.subscribe('ticket:created',
     'orders-service-queue-group',
     options);
@@ -30,3 +40,10 @@ stan.on('connect', () => {
   });
 
 });
+
+/**
+ * Graceful shutdown
+ * Process RESTART/KILL Event 
+*/
+process.on('SIGINT', () => stan.close());
+process.on('SIGTERM', () => stan.close());
