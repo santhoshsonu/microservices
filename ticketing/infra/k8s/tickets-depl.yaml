@@ -17,6 +17,17 @@ spec:
           image: armosdocker/ticketing-tickets
           # Env variables
           env:
+            # Provide pod name as env var
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MONGO_URI
+              value: "mongodb://ticketing-tickets-mongo-srv:27017/tickets"
+            - name: NATS_URI
+              value: "http://ticketing-nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: "ticketing-nats"
             - name: MONGO_URI
               value: "mongodb://ticketing-tickets-mongo-srv:27017/tickets"
             - name: JWT_SECRET

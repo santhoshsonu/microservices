@@ -21,9 +21,22 @@ const start = async () => {
   if (!config.MONGO_URL) {
     throw new Error('Env variable: MONGO_URI must be defined');
   }
+  if (!config.NATS_CLUSTER_ID) {
+    throw new Error('Env variable: NATS_CLUSTER_ID must be defined');
+  }
+  if (!config.NATS_CLIENT_ID) {
+    throw new Error('Env variable: NATS_CLIENT_ID must be defined');
+  }
+  if (!config.NATS_URL) {
+    throw new Error('Env variable: NATS_URL must be defined');
+  }
+
   try {
 
-    await natsWrapper.connect('ticketing-nats', 'abcdege', 'http://ticketing-nats-srv:4222');
+    await natsWrapper.connect(config.NATS_CLUSTER_ID,
+      config.NATS_CLIENT_ID,
+      config.NATS_URL);
+
     natsWrapper.client.on('close', () => {
       console.log('NATS connection closed');
       process.exit();
