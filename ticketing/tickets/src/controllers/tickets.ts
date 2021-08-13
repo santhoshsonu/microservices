@@ -1,6 +1,9 @@
 import { DatabaseConnectionError, NotFoundError, UnAuthorizedError } from '@microservice-tickets/common';
 import { NextFunction, Request, Response } from 'express';
+import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publisher';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
 import { Ticket, TicketDoc } from '../models/ticket';
+import { natsWrapper } from '../nats-wrapper';
 
 /**
  * Add a new Ticket
@@ -14,9 +17,21 @@ export const createTicket = async (req: Request, res: Response, next: NextFuncti
     title,
     price,
     userId: req.currentUser!.id
-  })
+  });
+
   try {
     await ticket.save();
+
+    // Publish event 
+    await new TicketCreatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+      createdAt: ticket.createdAt,
+      updatedAt: ticket.updatedAt
+    });
+
   } catch (error) {
     return next(new DatabaseConnectionError());
   }
@@ -85,6 +100,17 @@ export const updateTicket = async (req: Request, res: Response, next: NextFuncti
       title, price
     });
     await ticket.save();
+
+    // Publish event 
+    await new TicketUpdatedPublisher(natsWrapper.client).publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+      userId: ticket.userId,
+      createdAt: ticket.createdAt,
+      updatedAt: ticket.updatedAt
+    });
+
   } catch (error) {
     return next(new DatabaseConnectionError());
   }
