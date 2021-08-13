@@ -261,3 +261,24 @@ it('updates the ticket provided valid inputs', async () => {
   expect(ticketResponse.body.price).toEqual(100);
 
 });
+
+it('updates the ticket provided valid inputs and publishes event', async () => {
+  const cookie = global.getCookie();
+  const response = await request(app)
+    .post(`/api/tickets`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'asdad',
+      price: 10
+    });
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'new title',
+      price: 100
+    })
+    .expect(200);
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
