@@ -11,6 +11,9 @@ declare global {
   }
 }
 
+// Mock NATS connection
+jest.mock('../nats-wrapper');
+
 let mongo: MongoMemoryServer;
 beforeAll(async () => {
   commonConfig.JWT_KEY = 'asdadadawadw';
