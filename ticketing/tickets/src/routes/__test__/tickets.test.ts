@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
+import { natsWrapper } from '../../nats-wrapper';
 
 const createTicket = () => {
   const title = 'ABC';
@@ -86,6 +87,21 @@ it('creates a ticket with valid inputs', async () => {
   expect(tickets[0].price).toEqual(price);
 });
 
+it('creates a ticket with valid inputs and publishes event', async () => {
+  const title = 'ABC';
+  const price = 10;
+
+  await request(app)
+    .post('/api/tickets')
+    .set('Cookie', global.getCookie())
+    .send({ title, price })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+
+});
+
+
 /**
  * Get Ticket By id Tests  
  */
@@ -132,6 +148,7 @@ it('returns the ticket with valid id', async () => {
 
 });
 
+
 /**
  * Get All Tickets Tests  
  */
@@ -149,6 +166,7 @@ it('can fetch a list of tickets', async () => {
     .expect(200);
   expect(response.body.length).toEqual(3);
 });
+
 
 /**
  * Update Ticket Tests  
