@@ -3,6 +3,9 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
 
+// Mock NATS connection
+jest.mock('../../nats-wrapper');
+
 const createTicket = () => {
   const title = 'ABC';
   const price = 10;
