@@ -53,7 +53,67 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
     return next(new DatabaseConnectionError());
   }
 
-  // Generate order created event
+  // TODO: Publish order created event
 
   res.status(201).json(order);
+}
+
+/**
+ * Get all orders for the user
+ */
+export const getOrders = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.currentUser!.id;
+  try {
+    const orders = await Order.find({ userId }).populate('ticket');
+    res.status(200).json(orders);
+  } catch (_) {
+    return next(new DatabaseConnectionError());
+  }
+}
+
+/**
+ * Get orders by order id
+ */
+export const getOrderById = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.currentUser!.id;
+  const { orderId } = req.params;
+
+  try {
+    const order = await Order.findById(orderId).populate('ticket');
+    if (!order) {
+      return next(new NotFoundError());
+    }
+    if (order.userId != userId) {
+      return next(new UnAuthorizedError());
+    }
+    res.status(200).json(order);
+  } catch (_) {
+    return next(new DatabaseConnectionError());
+  }
+}
+
+/**
+ * Cancel order
+ */
+export const cancleOrder = async (req: Request, res: Response, next: NextFunction) => {
+  const userId = req.currentUser!.id;
+  const { orderId } = req.params;
+
+  try {
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return next(new NotFoundError());
+    }
+    if (order.userId != userId) {
+      return next(new UnAuthorizedError());
+    }
+    order.status = OrderStatus.Cancelled;
+    await order.save();
+
+    // TODO: Publish order created event
+
+    res.status(204).json(order);
+  } catch (_) {
+    return next(new DatabaseConnectionError());
+  }
 }
