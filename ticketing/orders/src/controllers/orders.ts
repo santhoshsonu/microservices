@@ -4,7 +4,6 @@ import { orderCancelledPublisher } from '../events/pubishers/order-cancelled-pub
 import { orderCreatedPublisher } from '../events/pubishers/order-created-publisher';
 import { Order } from '../models/order';
 import { Ticket, TicketDoc } from '../models/ticket';
-import { natsWrapper } from '../nats-wrapper';
 
 
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
