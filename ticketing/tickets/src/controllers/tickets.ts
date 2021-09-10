@@ -39,7 +39,7 @@ export const createTicket = async (req: Request, res: Response, next: NextFuncti
 };
 
 /**
- * Get Ticket by id
+ * Get all Tickets
  * Request path params
  * @param id: string
  */
