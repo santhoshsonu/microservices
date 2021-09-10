@@ -3,6 +3,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
 import { Order, OrderStatus } from '../../models/order';
+import { natsWrapper } from '../../nats-wrapper';
 
 
 const buildTicket = async () => {
@@ -97,7 +98,22 @@ it('reserves the ticket', async () => {
   expect(response.body.ticket.id).toEqual(ticket.id);
 });
 
-it.todo('reserves the ticket and publishes event');
+it('emits an order created event', async () => {
+  const ticket = Ticket.build({
+    title: 'Concert',
+    price: 20
+  });
+
+  await ticket.save();
+
+  const response = await request(app)
+    .post('/api/orders')
+    .set('Cookie', global.getCookie())
+    .send({ ticketId: ticket.id })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
 
 /**
  * Tests for Get Orders By User   
@@ -335,4 +351,23 @@ it('DELETE ORDER: Deletes an order', async () => {
   const updatedOrder = await Order.findById(order.id);
   expect(updatedOrder).not.toEqual(null);
   expect(updatedOrder!.status).toEqual(OrderStatus.Cancelled);
+});
+
+it('DELETE ORDER: emits an order cancelled event', async () => {
+  const ticket = await buildTicket();
+
+  const user = global.getCookie();
+
+  const { body: order } = await request(app)
+    .post('/api/orders')
+    .set('Cookie', user)
+    .send({ ticketId: ticket.id })
+    .expect(201);
+
+  await request(app)
+    .delete(`/api/orders/${order.id}`)
+    .set('Cookie', user)
+    .send()
+    .expect(204);
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
