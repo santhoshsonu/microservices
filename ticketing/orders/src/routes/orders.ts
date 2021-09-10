@@ -2,7 +2,7 @@ import { requireAuth, validateRequest } from '@microservice-tickets/common';
 import express from 'express';
 import { check } from 'express-validator';
 import mongoose from 'mongoose';
-import { createOrder } from '../controllers/orders';
+import { cancleOrder, createOrder, getOrderById, getOrders } from '../controllers/orders';
 
 const router = express.Router();
 
@@ -25,23 +25,39 @@ router.post('/', requireAuth,
  * List all orders route
 */
 router.get('/',
-
+  requireAuth,
+  getOrders
 );
 
 /**
  * Get order by id route
 */
-router.get('/:id',
-  requireAuth,
-
+router.get('/:orderId', requireAuth,
+  [
+    check('orderId')
+      .notEmpty()
+      .withMessage('OrderId id is required')
+      .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
+      .withMessage('Invalid Order Id')
+  ],
+  validateRequest,
+  getOrderById
 );
 
 /**
  * Cancel order by id route
 */
-router.delete('/:id',
+router.delete('/:orderId',
   requireAuth,
-
+  [
+    check('orderId')
+      .notEmpty()
+      .withMessage('OrderId id is required')
+      .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
+      .withMessage('Invalid Order Id')
+  ],
+  validateRequest,
+  cancleOrder
 );
 
 
