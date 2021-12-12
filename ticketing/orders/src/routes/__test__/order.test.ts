@@ -7,9 +7,13 @@ import { natsWrapper } from '../../nats-wrapper';
 
 
 const buildTicket = async () => {
+  const id = mongoose.Types.ObjectId().toHexString();
   const title = 'ABC';
   const price = 10;
-  return await Ticket.build({ title, price }).save();
+  const createdAt = new Date(Date.now());
+  const updatedAt = new Date(Date.now());
+
+  return await Ticket.build({ id, title, price, createdAt, updatedAt }).save();
 };
 
 /**
@@ -61,10 +65,7 @@ it('return an error if the ticket does not exists', async () => {
 });
 
 it('return an error if the ticket is already reserved', async () => {
-  const ticket = Ticket.build({
-    title: 'Concert',
-    price: 20
-  });
+  const ticket = await buildTicket();
 
   await ticket.save();
   const order = Order.build({
@@ -82,10 +83,7 @@ it('return an error if the ticket is already reserved', async () => {
 });
 
 it('reserves the ticket', async () => {
-  const ticket = Ticket.build({
-    title: 'Concert',
-    price: 20
-  });
+  const ticket = await buildTicket();
 
   await ticket.save();
 
@@ -99,12 +97,7 @@ it('reserves the ticket', async () => {
 });
 
 it('emits an order created event', async () => {
-  const ticket = Ticket.build({
-    title: 'Concert',
-    price: 20
-  });
-
-  await ticket.save();
+  const ticket = await buildTicket();
 
   const response = await request(app)
     .post('/api/orders')

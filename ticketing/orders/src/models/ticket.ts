@@ -2,8 +2,11 @@ import mongoose from 'mongoose';
 import { Order, OrderStatus } from './order';
 
 interface TicketAttrs {
+  id: string;
   title: string;
   price: number;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 interface TicketDoc extends mongoose.Document {
@@ -27,9 +30,11 @@ const ticketSchema = new mongoose.Schema({
     type: Number,
     required: true,
     min: 0
-  }
+  },
+  createdAt: Date,
+  updatedAt: Date,
+
 }, {
-  timestamps: true,
   toJSON: {
     transform(doc, ret) {
       ret.id = ret._id;
@@ -40,7 +45,13 @@ const ticketSchema = new mongoose.Schema({
 });
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-  return new Ticket(attrs);
+  return new Ticket({
+    _id: attrs.id, // Use ticket id as Mongoose Doc ID
+    title: attrs.title,
+    price: attrs.price,
+    createdAt: attrs.createdAt,
+    updatedAt: attrs.updatedAt
+  });
 }
 
 // Run query to look at all orders. Find an Order where the ticket
