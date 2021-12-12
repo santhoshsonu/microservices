@@ -19,7 +19,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     if (existingUser) {
       return next(new BadRequestError('Email already in use'));
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(`Database Error: ${err.message}`);
     return next(new InternalServerError());
   }
@@ -27,7 +27,7 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
   const user = User.build({ email, password });
   try {
     await user.save();
-  } catch (err) {
+  } catch (err: any) {
     console.log(`Signup Error: ${err.message}`);
     return next(new InternalServerError());
   }
@@ -74,7 +74,7 @@ export const signIn = async (req: Request, res: Response, next: NextFunction) =>
       jwt: userJWT
     };
     res.status(200).json(existingUser);
-  } catch (err) {
+  } catch (err: any) {
     console.log(`Signin Error: ${err.message}`);
     return next(new InternalServerError());
   }
