@@ -28,8 +28,6 @@ spec:
               value: "http://ticketing-nats-srv:4222"
             - name: NATS_CLUSTER_ID
               value: "ticketing-nats"
-            - name: MONGO_URI
-              value: "mongodb://ticketing-orders-mongo-srv:27017/orders"
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
