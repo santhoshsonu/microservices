@@ -3,6 +3,8 @@ import mongoose from 'mongoose';
 import { app } from './app';
 import { config } from './config/config';
 import { natsWrapper } from './nats-wrapper';
+import { TicketCreatedListener } from './events/listeners/ticket-created-listener';
+import { TicketUpdatedListener } from './events/listeners/ticket-updated-listener';
 
 /**
  * App port
@@ -45,6 +47,9 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close());
     process.on('SIGINT', () => natsWrapper.client.close());
 
+    new TicketCreatedListener(natsWrapper.client).listen();
+    new TicketUpdatedListener(natsWrapper.client).listen();
+    
     await mongoose.connect(config.MONGO_URL, {
       useNewUrlParser: true,
       useCreateIndex: true,
