@@ -1,9 +1,10 @@
 import { BadRequestError, DatabaseConnectionError, NotFoundError, OrderStatus, UnAuthorizedError } from '@microservice-tickets/common';
 import { NextFunction, Request, Response } from 'express';
-import { orderCancelledPublisher } from '../events/pubishers/order-cancelled-publisher';
-import { orderCreatedPublisher } from '../events/pubishers/order-created-publisher';
+import { OrderCancelledPublisher } from '../events/pubishers/order-cancelled-publisher';
+import { OrderCreatedPublisher } from '../events/pubishers/order-created-publisher';
 import { Order } from '../models/order';
 import { Ticket, TicketDoc } from '../models/ticket';
+import { natsWrapper } from '../nats-wrapper';
 
 
 const EXPIRATION_WINDOW_SECONDS = 15 * 60;
@@ -51,21 +52,20 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
   });
   try {
     await order.save();
+    // Publish order created event
+    await new OrderCreatedPublisher(natsWrapper.client).publish({
+      id: order.id,
+      expiresAt: order.expiresAt.toISOString(),
+      userId: order.userId,
+      status: order.status,
+      ticket: {
+        id: order.ticket.id,
+        price: order.ticket.price
+      }
+    });
   } catch (error) {
     return next(new DatabaseConnectionError());
   }
-
-  // Publish order created event
-  orderCreatedPublisher.publish({
-    id: order.id,
-    expiresAt: order.expiresAt.toISOString(),
-    userId: order.userId,
-    status: order.status,
-    ticket: {
-      id: order.ticket.id,
-      price: order.ticket.price
-    }
-  });
 
   res.status(201).json(order);
 }
@@ -123,7 +123,7 @@ export const cancleOrder = async (req: Request, res: Response, next: NextFunctio
     await order.save();
 
     // Publish order created event
-    orderCancelledPublisher.publish({
+    await new OrderCancelledPublisher(natsWrapper.client).publish({
       id: order.id,
       ticket: {
         id: order.ticket.id
