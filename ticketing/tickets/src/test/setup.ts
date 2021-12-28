@@ -4,11 +4,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
 declare global {
-  namespace NodeJS {
-    interface Global {
-      getCookie(): string[];
-    }
-  }
+  var getCookie: () => string[];
 }
 
 // Mock NATS connection
