@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { Order, OrderStatus } from './order';
 
 interface TicketAttrs {
@@ -12,6 +13,7 @@ interface TicketAttrs {
 interface TicketDoc extends mongoose.Document {
   title: string;
   price: number;
+  version: number;
   createdAt: Date;
   updatedAt: Date;
   isReserved(): Promise<boolean>;
@@ -19,6 +21,7 @@ interface TicketDoc extends mongoose.Document {
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
   build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: { id: string, version: number }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new mongoose.Schema({
@@ -44,6 +47,9 @@ const ticketSchema = new mongoose.Schema({
   }
 });
 
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket({
     _id: attrs.id, // Use ticket id as Mongoose Doc ID
@@ -51,6 +57,16 @@ ticketSchema.statics.build = (attrs: TicketAttrs) => {
     price: attrs.price,
     createdAt: attrs.createdAt,
     updatedAt: attrs.updatedAt
+  });
+}
+
+// Optimistic concurrency control
+// Find the previous version of the event
+// and then modify it
+ticketSchema.statics.findByEvent = (event: { id: string, version: number }) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1
   });
 }
 
