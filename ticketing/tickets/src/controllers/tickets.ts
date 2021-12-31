@@ -27,6 +27,7 @@ export const createTicket = async (req: Request, res: Response, next: NextFuncti
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
+      version: ticket.version,
       userId: ticket.userId,
       createdAt: ticket.createdAt,
       updatedAt: ticket.updatedAt
@@ -106,6 +107,7 @@ export const updateTicket = async (req: Request, res: Response, next: NextFuncti
       id: ticket.id,
       title: ticket.title,
       price: ticket.price,
+      version: ticket.version,
       userId: ticket.userId,
       createdAt: ticket.createdAt,
       updatedAt: ticket.updatedAt
