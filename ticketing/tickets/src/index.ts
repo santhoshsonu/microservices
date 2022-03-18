@@ -46,9 +46,8 @@ const start = async () => {
     process.on('SIGINT', () => natsWrapper.client.close());
 
     await mongoose.connect(config.MONGO_URL, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true
+      appName: 'ticketing-tickets',
+      autoIndex: true
     });
     console.log(`Connected to database ${config.MONGO_URL}`);
   } catch (err) { console.log(err); };

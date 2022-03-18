@@ -18,8 +18,7 @@ beforeAll(async () => {
   const mongoUri = await mongo.getUri();
 
   await mongoose.connect(mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    appName: 'ticketing-tickets',
   });
 
 });
