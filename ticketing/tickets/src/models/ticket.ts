@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface TicketAttrs {
   title: string;
@@ -13,6 +14,7 @@ interface TicketDoc extends mongoose.Document {
   version: number;
   createdAt: Date;
   updatedAt: Date;
+  orderId?: string; // Optional
 }
 
 interface TicketModel extends mongoose.Model<TicketDoc> {
@@ -31,6 +33,10 @@ const ticketSchema = new mongoose.Schema({
   price: {
     type: Number,
     required: true
+  },
+  orderId: {
+    type: String,
+    required: false
   }
 }, {
   timestamps: true,
@@ -46,20 +52,7 @@ const ticketSchema = new mongoose.Schema({
 });
 
 ticketSchema.set('versionKey', 'version');
-
-ticketSchema.pre('save', function (next) {
-  const versionKey = this.get('versionKey');
-  this.$where = {
-    ...this.$where,
-    [versionKey]: this[versionKey],
-  };
-
-  // Increment the version atomically
-  this.increment();
-
-  // Invoke next hook
-  next();
-});
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
   return new Ticket(attrs);

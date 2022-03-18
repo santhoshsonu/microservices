@@ -1,4 +1,4 @@
-import { DatabaseConnectionError, NotFoundError, UnAuthorizedError } from '@microservice-tickets/common';
+import { BadRequestError, DatabaseConnectionError, NotFoundError, UnAuthorizedError } from '@microservice-tickets/common';
 import { NextFunction, Request, Response } from 'express';
 import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publisher';
 import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
@@ -93,6 +93,10 @@ export const updateTicket = async (req: Request, res: Response, next: NextFuncti
 
   if (ticket.userId !== req.currentUser!.id) {
     return next(new UnAuthorizedError());
+  }
+
+  if (ticket.orderId) {
+    return next(new BadRequestError('Ticket is already reserved'));
   }
 
   const { title, price } = req.body;

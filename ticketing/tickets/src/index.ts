@@ -2,6 +2,8 @@ import { config as commonConfig } from '@microservice-tickets/common';
 import mongoose from 'mongoose';
 import { app } from './app';
 import { config } from './config/config';
+import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
+import { OrderCreatedListener } from './events/listeners/order-created-listener';
 import { natsWrapper } from './nats-wrapper';
 
 /**
@@ -44,6 +46,9 @@ const start = async () => {
 
     process.on('SIGTERM', () => natsWrapper.client.close());
     process.on('SIGINT', () => natsWrapper.client.close());
+
+    new OrderCreatedListener(natsWrapper.client).listen();
+    new OrderCancelledListener(natsWrapper.client).listen();
 
     await mongoose.connect(config.MONGO_URL, {
       appName: 'ticketing-tickets',

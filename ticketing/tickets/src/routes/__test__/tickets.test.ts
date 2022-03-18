@@ -209,7 +209,7 @@ it('returns a 401 if the user does not own the ticket', async () => {
 it('returns a 400 if the user provided an invalid title or price', async () => {
   const cookie = global.getCookie();
   const response = await request(app)
-    .post(`/api/ticket`)
+    .post(`/api/tickets`)
     .set('Cookie', cookie)
     .send({
       title: 'asdad',
@@ -229,6 +229,31 @@ it('returns a 400 if the user provided an invalid title or price', async () => {
     .send({
       title: 'abcd',
       price: -10
+    })
+    .expect(400);
+});
+
+it('rejects updates if the ticket is reserved', async () => {
+  const cookie = global.getCookie();
+  const response = await request(app)
+    .post(`/api/tickets`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'asdad',
+      price: 10
+    });
+
+  // Update ticket with order id
+  const ticket = await Ticket.findById(response.body.id);
+  ticket!.set({ orderId: new mongoose.Types.ObjectId().toHexString() });
+  await ticket!.save();
+
+  await request(app)
+    .put(`/api/tickets/${response.body.id}`)
+    .set('Cookie', cookie)
+    .send({
+      title: 'abcd',
+      price: 100
     })
     .expect(400);
 });
@@ -282,3 +307,4 @@ it('updates the ticket provided valid inputs and publishes event', async () => {
     .expect(200);
   expect(natsWrapper.client.publish).toHaveBeenCalled();
 });
+
