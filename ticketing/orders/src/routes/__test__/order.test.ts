@@ -7,13 +7,15 @@ import { natsWrapper } from '../../nats-wrapper';
 
 
 const buildTicket = async () => {
-  const id = mongoose.Types.ObjectId().toHexString();
-  const title = 'ABC';
-  const price = 10;
-  const createdAt = new Date(Date.now());
-  const updatedAt = new Date(Date.now());
+  const createdAt = new Date();
 
-  return await Ticket.build({ id, title, price, createdAt, updatedAt }).save();
+  return await Ticket.build({
+    id: mongoose.Types.ObjectId().toHexString(),
+    title: 'ABC',
+    price: 10,
+    createdAt,
+    updatedAt: createdAt
+  }).save();
 };
 
 /**
