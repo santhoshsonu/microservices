@@ -50,7 +50,8 @@ const orderSchema = new mongoose.Schema({
       delete ret._id;
       return ret;
     }
-  }
+  },
+  optimisticConcurrency: true
 });
 
 orderSchema.set('versionKey', 'version');
