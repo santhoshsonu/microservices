@@ -30,9 +30,10 @@ const orderSchema = new mongoose.Schema({
     required: true
   },
   status: {
-    type: OrderStatus,
+    type: String,
+    required: true,
     enum: Object.values(OrderStatus),
-    required: true
+    default: OrderStatus.Created
   },
   expiresAt: {
     type: mongoose.Schema.Types.Date,
