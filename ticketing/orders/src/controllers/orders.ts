@@ -1,4 +1,7 @@
-import { BadRequestError, DatabaseConnectionError, NotFoundError, OrderStatus, UnAuthorizedError } from '@microservice-tickets/common';
+import {
+  BadRequestError, DatabaseConnectionError, EXPIRATION_WINDOW_SECONDS,
+  NotFoundError, OrderStatus, UnAuthorizedError
+} from '@microservice-tickets/common';
 import { NextFunction, Request, Response } from 'express';
 import { OrderCancelledPublisher } from '../events/pubishers/order-cancelled-publisher';
 import { OrderCreatedPublisher } from '../events/pubishers/order-created-publisher';
@@ -6,8 +9,6 @@ import { Order } from '../models/order';
 import { Ticket, TicketDoc } from '../models/ticket';
 import { natsWrapper } from '../nats-wrapper';
 
-
-const EXPIRATION_WINDOW_SECONDS = 15 * 60;
 
 /**
  * Add a new Order for the ticket
