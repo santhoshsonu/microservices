@@ -26,5 +26,5 @@ spec:
               value: "http://ticketing-nats-srv:4222"
             - name: NATS_CLUSTER_ID
               value: "ticketing-nats"
-            - name: REDIS-HOST
+            - name: REDIS_HOST
               value: "ticketing-expiration-redis-srv"
