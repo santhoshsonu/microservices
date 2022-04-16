@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticketing-expiration
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticketing-expiration
+  template:
+    metadata:
+      labels:
+        app: ticketing-expiration
+    spec:
+      containers:
+        - name: ticketing-expiration
+          image: armosdocker/ticketing-expiration
+          # Env variables
+          env:
+            # Provide pod name as env var
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NATS_URI
+              value: "http://ticketing-nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: "ticketing-nats"
+            - name: REDIS-HOST
+              value: "ticketing-expiration-redis-srv"
