@@ -2,6 +2,7 @@ import { currentUserMiddleware, errorHandler, NotFoundError } from '@microservic
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 import express from 'express';
+import { paymentsRouter } from './routes/payments';
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(currentUserMiddleware);
 /**
  * App routes
  */
+app.use('/api/payments', paymentsRouter);
 
 /**
  * catch 404 errors and pass to global error hanlder
