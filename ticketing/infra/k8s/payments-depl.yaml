@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ticketing-payments
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ticketing-payments
+  template:
+    metadata:
+      labels:
+        app: ticketing-payments
+    spec:
+      containers:
+        - name: ticketing-payments
+          image: armosdocker/ticketing-payments
+          # Env variables
+          env:
+            # Provide pod name as env var
+            - name: NATS_CLIENT_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: MONGO_URI
+              value: "mongodb://ticketing-payments-mongo-srv:27017/payments"
+            - name: NATS_URI
+              value: "http://ticketing-nats-srv:4222"
+            - name: NATS_CLUSTER_ID
+              value: "ticketing-nats"
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY # K8s secret key
+          # resources:
+          #   limits:
+          #     memory: "256Mi"
+          #     cpu: "250m"
+
+---
+# Cluster Service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ticketing-payments-srv
+spec:
+  selector:
+    app: ticketing-payments
+  ports:
+    - name: ticketing-payments
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
