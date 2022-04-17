@@ -4,7 +4,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 
 declare global {
-  var getCookie: () => string[];
+  var getCookie: (id?: string) => string[];
 }
 
 // Mock NATS connection
@@ -40,10 +40,10 @@ afterAll(async () => {
 });
 
 // Auth helper
-global.getCookie = () => {
+global.getCookie = (id?: string) => {
   // Build JWT payload { id, email }
   const payload = {
-    id: new mongoose.Types.ObjectId().toHexString(),
+    id: id || new mongoose.Types.ObjectId().toHexString(),
     email: 'test@ticketing.microservices.com'
   };
 
