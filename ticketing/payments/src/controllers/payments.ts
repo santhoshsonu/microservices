@@ -4,6 +4,7 @@ import {
 } from '@microservice-tickets/common';
 import { NextFunction, Request, Response } from 'express';
 import { Order } from '../models/order';
+import { stripe } from '../stripe';
 
 /**
  * Create a new Payment for the order
@@ -23,5 +24,11 @@ export const createPayment = async (req: Request, res: Response, next: NextFunct
 
     if (order.status === OrderStatus.Cancelled) return next(new BadRequestError('order is cancelled'));
 
-    res.json({ success: true });
+    await stripe.charges.create({
+        currency: 'usd',
+        amount: order.price * 100, // in cents
+        source: token
+    });
+
+    res.status(201).json({ success: true });
 }
