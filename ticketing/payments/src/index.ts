@@ -33,6 +33,9 @@ const start = async () => {
   if (!config.NATS_URL) {
     throw new Error('Env variable: NATS_URL must be defined');
   }
+  if (!config.STRIPE_SECRET) {
+    throw new Error('Env variable: STRIPE_SECRET must be defined');
+  }
 
   try {
     await natsWrapper.connect(config.NATS_CLUSTER_ID,
