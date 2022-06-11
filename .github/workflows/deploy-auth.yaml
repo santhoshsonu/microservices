@@ -29,10 +29,10 @@ jobs:
         run: cd ticketing/auth && docker build -t armosdocker/ticketing-auth .
 
       - name: Docker Login
-      - run: docker login -u $DOCKER_USERNAME -p DOCKER_PASSWORD
+        run: docker login -u $DOCKER_USERNAME -p DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Docker Push
-      - run: docker push armosdocker/ticketing-auth
+        run: docker push armosdocker/ticketing-auth
