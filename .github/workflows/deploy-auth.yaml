@@ -34,4 +34,4 @@ jobs:
         with:
           context: ticketing/auth
           push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/auth:latest
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-auth:latest
