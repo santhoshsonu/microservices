@@ -47,8 +47,7 @@ jobs:
         env:
           KUBECONFIG: ${{ steps.namespace.outputs.kubeconfig }}
         with:
-          context: ticketing/infra/k8s
           namespace: ticketing-santhoshsonu
-          manifest: auth-depl.yaml
+          manifest: ticketing/infra/k8s/auth-depl.yaml
           tag: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-auth:latest
           waitOn: deployment/ticketing-auth-depl # Deplyment name present in auth-depl
