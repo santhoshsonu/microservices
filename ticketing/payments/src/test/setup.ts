@@ -9,6 +9,10 @@ declare global {
 
 // Mock NATS connection
 jest.mock('../nats-wrapper');
+jest.setTimeout(10000);
+
+// Stripe Test Secret Key
+process.env.STRIPE_SECRET = 'sk_test_51Kpa25SIvYE2d8FDe9yFaDtJon6D8mUbs2Rz1D0MWAkkPEWfUC5YMIp7N0iBEWZlK5vjXpddL9GlrW96QoPuls8y00P2g69jE0';
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {

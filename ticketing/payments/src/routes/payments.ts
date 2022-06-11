@@ -1,6 +1,6 @@
 import { requireAuth, validateRequest } from '@microservice-tickets/common';
 import express from 'express';
-import { check } from 'express-validator';
+import { check, oneOf } from 'express-validator';
 import { createPayment } from '../controllers/payments';
 import mongoose from "mongoose";
 
@@ -9,10 +9,16 @@ const router = express.Router();
 router.post('/',
     requireAuth,
     [
-        check('token')
-            .not()
-            .isEmpty()
-            .withMessage('token is requried'),
+        oneOf([
+            check('paymentMethodId')
+                .not()
+                .isEmpty()
+                .withMessage('paymentMethodId is requried'),
+            check('stripeId')
+                .not()
+                .isEmpty()
+                .withMessage('stripeId is requried')
+        ]),
         check('orderId')
             .not()
             .isEmpty()
