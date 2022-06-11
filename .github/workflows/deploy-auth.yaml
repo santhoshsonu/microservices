@@ -38,10 +38,10 @@ jobs:
       # Login to Okteto Cloud and retrieve the kubeconfig credentials needed to access the namespace
       - name: Get Kubeconfig
         uses: okteto/actions/namespace@v1
-            id: namespace
-            with:
-              token: ${{ secrets.OKTETO_TOKEN }}
-              namespace: ticketing-santhoshsonu
+        id: namespace
+        with:
+          token: ${{ secrets.OKTETO_TOKEN }}
+          namespace: ticketing-santhoshsonu
       - name: Deploy and Wait
         uses: okteto/actions/deploy@v1
           env:
