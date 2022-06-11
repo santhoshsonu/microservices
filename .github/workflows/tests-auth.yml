@@ -6,9 +6,13 @@ name: tests-auth
 on:
   # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "master" ]
+    branches: ["master"]
+    paths:
+      - "ticketing/auth/**"
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
+    paths:
+      - "ticketing/auth/**"
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,4 +32,3 @@ jobs:
       # Runs a single command using the runners shell
       - name: Run Tests on Auth Service
         run: cd ticketing/auth && npm install && npm run test:ci
-
