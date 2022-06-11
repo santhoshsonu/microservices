@@ -44,11 +44,11 @@ jobs:
           namespace: ticketing-santhoshsonu
       - name: Deploy and Wait
         uses: okteto/actions/deploy@v1
-          env:
-            KUBECONFIG: ${{ steps.namespace.outputs.kubeconfig }}
-          with:
-            context: ticketing/infra/k8s
-            namespace: ticketing-santhoshsonu
-            manifest: auth-depl.yaml
-            tag: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-auth:latest
-            waitOn: deployment/ticketing-auth-depl # Deplyment name present in auth-depl
+        env:
+          KUBECONFIG: ${{ steps.namespace.outputs.kubeconfig }}
+        with:
+          context: ticketing/infra/k8s
+          namespace: ticketing-santhoshsonu
+          manifest: auth-depl.yaml
+          tag: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-auth:latest
+          waitOn: deployment/ticketing-auth-depl # Deplyment name present in auth-depl
