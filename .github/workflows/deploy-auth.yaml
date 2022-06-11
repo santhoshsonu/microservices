@@ -32,7 +32,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ticketing/auth/Dockerfile
+          context: ticketing/auth
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/auth:latest
