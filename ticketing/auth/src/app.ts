@@ -2,6 +2,7 @@ import { errorHandler, NotFoundError } from '@microservice-tickets/common';
 import { json } from 'body-parser';
 import cookieSession from 'cookie-session';
 import express from 'express';
+import helmet from 'helmet';
 import { authRouter } from './routes/auth';
 
 
@@ -12,6 +13,7 @@ const app = express();
 app.set('trust proxy', true);
 
 app.use(json());
+app.use(helmet());
 
 // Allow cookies to be set only for https requests
 // except for running test suites
