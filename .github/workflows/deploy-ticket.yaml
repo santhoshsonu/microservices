@@ -1,0 +1,53 @@
+# This is a basic workflow to help you get started with Actions
+
+name: deploy-ticket
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+  push:
+    branches: ["master"]
+    paths:
+      - "ticketing/ticket/**"
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: ticketing/ticket
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-tickets:latest
+      # Login to Okteto Cloud and retrieve the kubeconfig credentials needed to access the namespace
+      - name: Get Kubeconfig
+        uses: okteto/actions/namespace@v1
+        id: namespace
+        with:
+          token: ${{ secrets.OKTETO_TOKEN }}
+          namespace: ticketing-santhoshsonu
+      - name: Deploy and Wait
+        uses: okteto/actions/deploy@v1
+        env:
+          KUBECONFIG: ${{ steps.namespace.outputs.kubeconfig }}
+        with:
+          namespace: ticketing-santhoshsonu
+          manifest: ticketing/infra/k8s/tickets-depl.yaml
+          tag: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-tickets:latest
+          waitOn: deployment/ticketing-tickets-depl # Deplyment name present in ticket-depl
