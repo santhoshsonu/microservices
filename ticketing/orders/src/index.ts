@@ -55,9 +55,8 @@ const start = async () => {
     new PaymentCreatedListener(natsWrapper.client).listen();
 
     await mongoose.connect(config.MONGO_URL, {
-      useNewUrlParser: true,
-      useCreateIndex: true,
-      useUnifiedTopology: true
+      appName: 'ticketing-orders',
+      autoIndex: true
     });
     console.log(`Connected to database ${config.MONGO_URL}`);
   } catch (err) { console.log(err); };

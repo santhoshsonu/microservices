@@ -12,7 +12,7 @@ const setup = async () => {
     // create and save a ticket
     const creationDate = new Date();
     const ticket = Ticket.build({
-        id: mongoose.Types.ObjectId().toHexString(),
+        id: new mongoose.Types.ObjectId().toHexString(),
         title: 'concert',
         price: 15,
         createdAt: creationDate,

@@ -10,7 +10,7 @@ const buildTicket = async () => {
   const createdAt = new Date();
 
   return await Ticket.build({
-    id: mongoose.Types.ObjectId().toHexString(),
+    id: new mongoose.Types.ObjectId().toHexString(),
     title: 'ABC',
     price: 10,
     createdAt,
@@ -55,7 +55,7 @@ it('returns a status of 400 if the ticket id is invalid', async () => {
 });
 
 it('return an error if the ticket does not exists', async () => {
-  const ticketId = mongoose.Types.ObjectId().toHexString();
+  const ticketId = new mongoose.Types.ObjectId().toHexString();
 
   await request(app)
     .post('/api/orders')
@@ -182,7 +182,7 @@ it('fetches orders for a particular user', async () => {
  */
 
 it('GET ORDER BY ID: has a route handler listening to /api/orders/:orderId for GET requests', async () => {
-  const orderId = mongoose.Types.ObjectId().toHexString();
+  const orderId = new mongoose.Types.ObjectId().toHexString();
   const response = await request(app)
     .get(`/api/orders/${orderId}`)
     .send();
@@ -190,7 +190,7 @@ it('GET ORDER BY ID: has a route handler listening to /api/orders/:orderId for G
 });
 
 it('GET ORDER BY ID: can only be accessed if the user is signed in', async () => {
-  const orderId = mongoose.Types.ObjectId().toHexString();
+  const orderId = new mongoose.Types.ObjectId().toHexString();
   await request(app)
     .get(`/api/orders/${orderId}`)
     .send()
@@ -198,7 +198,7 @@ it('GET ORDER BY ID: can only be accessed if the user is signed in', async () =>
 });
 
 it('GET ORDER BY ID: returns a status other than 401 if the user is signed in', async () => {
-  const orderId = mongoose.Types.ObjectId().toHexString();
+  const orderId = new mongoose.Types.ObjectId().toHexString();
   const response = await request(app)
     .get(`/api/orders/${orderId}`)
     .set('Cookie', global.getCookie())
@@ -216,7 +216,7 @@ it('GET ORDER BY ID: return 400 with invalid order id', async () => {
 });
 
 it('GET ORDER BY ID: return 404 if order does not exists', async () => {
-  const orderId = mongoose.Types.ObjectId().toHexString();
+  const orderId = new mongoose.Types.ObjectId().toHexString();
   const response = await request(app)
     .get(`/api/orders/${orderId}`)
     .set('Cookie', global.getCookie())
@@ -267,7 +267,7 @@ it('GET ORDER BY ID: fetches orders for a particular orderId', async () => {
  */
 
 it('DELETE ORDER: has a route handler listening to /api/orders/:orderId for DELETE requests', async () => {
-  const orderId = mongoose.Types.ObjectId().toHexString();
+  const orderId = new mongoose.Types.ObjectId().toHexString();
   const response = await request(app)
     .delete(`/api/orders/${orderId}`)
     .send();
@@ -275,7 +275,7 @@ it('DELETE ORDER: has a route handler listening to /api/orders/:orderId for DELE
 });
 
 it('DELETE ORDER: can only be accessed if the user is signed in', async () => {
-  const orderId = mongoose.Types.ObjectId().toHexString();
+  const orderId = new mongoose.Types.ObjectId().toHexString();
   await request(app)
     .delete(`/api/orders/${orderId}`)
     .send()
@@ -283,7 +283,7 @@ it('DELETE ORDER: can only be accessed if the user is signed in', async () => {
 });
 
 it('DELETE ORDER: returns a status other than 401 if the user is signed in', async () => {
-  const orderId = mongoose.Types.ObjectId().toHexString();
+  const orderId = new mongoose.Types.ObjectId().toHexString();
   const response = await request(app)
     .delete(`/api/orders/${orderId}`)
     .set('Cookie', global.getCookie())
@@ -301,7 +301,7 @@ it('DELETE ORDER: return 400 with invalid order id', async () => {
 });
 
 it('DELETE ORDER: return 404 if order does not exists', async () => {
-  const orderId = mongoose.Types.ObjectId().toHexString();
+  const orderId = new mongoose.Types.ObjectId().toHexString();
   const response = await request(app)
     .delete(`/api/orders/${orderId}`)
     .set('Cookie', global.getCookie())
