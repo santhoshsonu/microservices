@@ -47,8 +47,7 @@ const ticketSchema = new mongoose.Schema({
       ret.id = id;
       return ret;
     }
-  },
-  optimisticConcurrency: true
+  }
 });
 
 ticketSchema.set('versionKey', 'version');
