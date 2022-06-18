@@ -22,12 +22,21 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: MONGO_URI
-              value: "mongodb://ticketing-tickets-mongo-srv:27017/tickets"
             - name: NATS_URI
-              value: "http://ticketing-nats-srv:4222"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: NATS_URI
             - name: NATS_CLUSTER_ID
-              value: "ticketing-nats"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: NATS_CLUSTER_ID
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: TICKET_MONGO_DB_URL
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
