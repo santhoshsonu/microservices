@@ -17,6 +17,8 @@ spec:
           image: armosdocker/ticketing-client
           # Env variables
           env:
+            - name: NAMESPACE
+              value: $NAMESPACE
             - name: OKTETO_NAMESPACE
               valueFrom:
                 configMapKeyRef:
