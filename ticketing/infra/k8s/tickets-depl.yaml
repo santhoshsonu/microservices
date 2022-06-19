@@ -15,6 +15,7 @@ spec:
       containers:
         - name: ticketing-tickets
           image: armosdocker/ticketing-tickets
+          imagePullPolicy: Always
           # Env variables
           env:
             # Provide pod name as env var
