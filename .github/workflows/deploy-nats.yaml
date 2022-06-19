@@ -16,6 +16,8 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       # Login to Okteto Cloud and create deployment from k8s manifest
       - uses: okteto/login@master
         with:
