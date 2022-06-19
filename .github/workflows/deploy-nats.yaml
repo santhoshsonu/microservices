@@ -28,4 +28,4 @@ jobs:
         uses: okteto/apply@master
         with:
           namespace: ticketing-santhoshsonu
-          manifest: ./ticketing/infra/k8s/nats-depl.yaml
+          manifest: infra/k8s/nats-depl.yaml
