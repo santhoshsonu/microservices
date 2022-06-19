@@ -17,6 +17,11 @@ spec:
           image: armosdocker/ticketing-client
           # Env variables
           env:
+            - name: OKTETO_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: ticketing-client
+                  key: namespace
             - name: API_BASE_URL
               value: https://ingress-srv-${OKTETO_NAMESPACE}.cloud.okteto.net
 
