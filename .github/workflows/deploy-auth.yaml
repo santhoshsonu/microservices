@@ -48,8 +48,3 @@ jobs:
         with:
           namespace: ticketing-santhoshsonu
           manifest: ticketing/infra/k8s/auth-depl.yaml
-      - name: "Push changes"
-        uses: okteto/push@latest
-        with:
-          namespace: ticketing-santhoshsonu
-          name: ticketing-auth-depl
