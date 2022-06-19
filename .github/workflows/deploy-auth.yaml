@@ -41,13 +41,14 @@ jobs:
           token: ${{ secrets.OKTETO_TOKEN }}
 
       - name: "Activate ticketing namespace"
-        uses: okteto/namespace@master
+        uses: okteto/namespace@latest
         with:
-          name: ticketing-santhoshsonu
+          namespace: ticketing-santhoshsonu
 
       - name: "Create deployment"
         uses: okteto/apply@master
         with:
+          namespace: ticketing-santhoshsonu
           manifest: ticketing/infra/k8s/auth-depl.yaml
 
       # - name: Get Kubeconfig
