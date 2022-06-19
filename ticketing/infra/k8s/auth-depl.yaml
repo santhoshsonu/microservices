@@ -15,7 +15,6 @@ spec:
       containers:
         - name: ticketing-auth
           image: armosdocker/ticketing-auth
-          imagePullPolicy: Always
           # Env variables
           env:
             - name: MONGO_URI
