@@ -3,7 +3,7 @@ import axios from 'axios';
 const axiosClient = ({ req }) => {
   if (typeof window === 'undefined') {
     // We are on the server
-    console.log(`NAMESPACE: ${process.env.NAMESPACE}`);
+    console.log(`NAMESPACE: ${process.env.OKTETO_NAMESPACE}`);
     console.log(`API BASE URL: ${process.env.API_BASE_URL}`);
     return axios.create({
       baseURL: process.env.API_BASE_URL,
