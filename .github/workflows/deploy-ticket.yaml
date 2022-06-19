@@ -35,19 +35,16 @@ jobs:
           context: ticketing/tickets
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-tickets:latest
-      # Login to Okteto Cloud and retrieve the kubeconfig credentials needed to access the namespace
-      - name: Get Kubeconfig
-        uses: okteto/actions/namespace@v1
-        id: namespace
+      # Login to Okteto Cloud and create deployment from k8s manifest
+      - uses: okteto/login@master
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
+      - name: "Activate ticketing namespace"
+        uses: okteto/namespace@latest
+        with:
           namespace: ticketing-santhoshsonu
-      - name: Deploy and Wait
-        uses: okteto/actions/deploy@v1
-        env:
-          KUBECONFIG: ${{ steps.namespace.outputs.kubeconfig }}
+      - name: "Create deployment"
+        uses: okteto/apply@master
         with:
           namespace: ticketing-santhoshsonu
           manifest: ticketing/infra/k8s/tickets-depl.yaml
-          tag: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-tickets:latest
-          waitOn: deployment/ticketing-tickets-depl # Deplyment name present in ticket-depl
