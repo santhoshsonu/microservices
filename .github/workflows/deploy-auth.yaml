@@ -39,30 +39,17 @@ jobs:
       - uses: okteto/login@master
         with:
           token: ${{ secrets.OKTETO_TOKEN }}
-
       - name: "Activate ticketing namespace"
         uses: okteto/namespace@latest
         with:
           namespace: ticketing-santhoshsonu
-
       - name: "Create deployment"
         uses: okteto/apply@master
         with:
           namespace: ticketing-santhoshsonu
           manifest: ticketing/infra/k8s/auth-depl.yaml
-
-      # - name: Get Kubeconfig
-      #   uses: okteto/actions/namespace@v1
-      #   id: namespace
-      #   with:
-      #     token: ${{ secrets.OKTETO_TOKEN }}
-      #     namespace: ticketing-santhoshsonu
-      # - name: Deploy and Wait
-      #   uses: okteto/actions/deploy@v1
-      #   env:
-      #     KUBECONFIG: ${{ steps.namespace.outputs.kubeconfig }}
-      #   with:
-      #     namespace: ticketing-santhoshsonu
-      #     manifest: ticketing/infra/k8s/auth-depl.yaml
-      #     tag: ${{ secrets.DOCKER_HUB_USERNAME }}/ticketing-auth:latest
-      #     waitOn: deployment/ticketing-auth-depl # Deplyment name present in auth-depl
+      - name: "Push changes"
+        uses: okteto/push@latest
+        with:
+          namespace: ticketing-santhoshsonu
+          name: ticketing-auth-depl
