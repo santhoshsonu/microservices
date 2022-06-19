@@ -15,6 +15,10 @@ spec:
       containers:
         - name: ticketing-client
           image: armosdocker/ticketing-client
+          # Env variables
+          env:
+            - name: API_BASE_URL
+              value: https://ingress-srv-${OKTETO_NAMESPACE}.cloud.okteto.net
 
 ---
 # Cluster Service
