@@ -16,15 +16,15 @@ it('returns a 404 when purchasing an order that does not exist', async () => {
         .set('Cookie', global.getCookie())
         .send({
             paymentMethodId: 'asldkfj',
-            orderId: mongoose.Types.ObjectId().toHexString(),
+            orderId: new mongoose.Types.ObjectId().toHexString(),
         })
         .expect(404);
 });
 
 it('returns a 401 when purchasing an order that doesnt belong to the user', async () => {
     const order = Order.build({
-        id: mongoose.Types.ObjectId().toHexString(),
-        userId: mongoose.Types.ObjectId().toHexString(),
+        id: new mongoose.Types.ObjectId().toHexString(),
+        userId: new mongoose.Types.ObjectId().toHexString(),
         price: 20,
         status: OrderStatus.Created,
     });
@@ -41,9 +41,9 @@ it('returns a 401 when purchasing an order that doesnt belong to the user', asyn
 });
 
 it('returns a 400 when purchasing a cancelled order', async () => {
-    const userId = mongoose.Types.ObjectId().toHexString();
+    const userId = new mongoose.Types.ObjectId().toHexString();
     const order = Order.build({
-        id: mongoose.Types.ObjectId().toHexString(),
+        id: new mongoose.Types.ObjectId().toHexString(),
         userId,
         price: 20,
         status: OrderStatus.Cancelled,
@@ -61,10 +61,10 @@ it('returns a 400 when purchasing a cancelled order', async () => {
 });
 
 it('returns a 200 with 3d secure not supported card', async () => {
-    const userId = mongoose.Types.ObjectId().toHexString();
+    const userId = new mongoose.Types.ObjectId().toHexString();
     const price = Math.floor(Math.random() * 10000)
     const order = Order.build({
-        id: mongoose.Types.ObjectId().toHexString(),
+        id: new mongoose.Types.ObjectId().toHexString(),
         userId,
         price,
         status: OrderStatus.Created,
@@ -95,10 +95,10 @@ it('returns a 200 with 3d secure not supported card', async () => {
 });
 
 it('returns a 200 with 3d secure supported card', async () => {
-    const userId = mongoose.Types.ObjectId().toHexString();
+    const userId = new mongoose.Types.ObjectId().toHexString();
     const price = Math.floor(Math.random() * 10000)
     const order = Order.build({
-        id: mongoose.Types.ObjectId().toHexString(),
+        id: new mongoose.Types.ObjectId().toHexString(),
         userId,
         price,
         status: OrderStatus.Created,
