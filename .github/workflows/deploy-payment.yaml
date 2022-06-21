@@ -47,4 +47,4 @@ jobs:
         uses: okteto/apply@master
         with:
           namespace: ticketing-santhoshsonu
-          manifest: ticketing/infra/k8s/payments-depl
+          manifest: ticketing/infra/k8s/payments-depl.yaml
