@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 
@@ -8,6 +8,7 @@ interface PaymentAttrs {
 }
 
 interface PaymentDoc extends mongoose.Document {
+    _id: Types.ObjectId;
     orderId: string;
     stripeId: string;
     version: number;
@@ -36,8 +37,7 @@ const paymentSchema = new mongoose.Schema({
             delete ret._id;
             return ret;
         }
-    },
-    optimisticConcurrency: true
+    }
 });
 
 paymentSchema.set('versionKey', 'version');
