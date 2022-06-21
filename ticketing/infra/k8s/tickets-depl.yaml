@@ -43,10 +43,6 @@ spec:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY # K8s secret key
-          # resources:
-          #   limits:
-          #     memory: "256Mi"
-          #     cpu: "250m"
 
 ---
 # Cluster Service

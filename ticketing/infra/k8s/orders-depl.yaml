@@ -22,21 +22,26 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.name
-            - name: MONGO_URI
-              value: "mongodb://ticketing-orders-mongo-srv:27017/orders"
             - name: NATS_URI
-              value: "http://ticketing-nats-srv:4222"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: NATS_URI
             - name: NATS_CLUSTER_ID
-              value: "ticketing-nats"
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: NATS_CLUSTER_ID
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: db-secrets
+                  key: ORDER_MONGO_DB_URL
             - name: JWT_SECRET
               valueFrom:
                 secretKeyRef:
                   name: jwt-secret
                   key: JWT_KEY # K8s secret key
-          # resources:
-          #   limits:
-          #     memory: "256Mi"
-          #     cpu: "250m"
 
 ---
 # Cluster Service
